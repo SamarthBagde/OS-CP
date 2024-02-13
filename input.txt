@@ -1,0 +1,8 @@
+$AMJ000100030001
+GD10PD10H
+$DTA
+Hello, World
+$END0001
+
+
+
