@@ -4,36 +4,38 @@
 
 using namespace std;
 
-// char M[100][4]; // Memory
-// char R[40];     // genaralRegister
-// int IC = 0;
-// char IR[4];
-// bool C = false; // toggle
+class OS
+{
+private:
+    char M[100][4];
+    char IR[4];
+    char R[4];
+    int SI;
+    int IC;
+    bool C;
+    int blockCount;
+    int lineNo;
 
-int mCount = 0; // memory block count
-int noIn = 0;   // memory card row count
+public:
+    void init();
+    void load();
+    void display();
+    void startExecution();
+    void executeProgram();
+    int findAddress();
+    void MOS();
+    void read();
+    void write();
+    void terminate();
+    ifstream readFile;
+    ofstream writeFile;
+    string line;
+};
 
-// Memory initialization
-void init(char M[][4])
+void OS::display()
 {
     for (int i = 0; i < 100; i++)
     {
-        for (int j = 0; j < 4; j++)
-        {
-            M[i][j] = '-';
-        }
-    }
-}
-
-// display memory
-void displayM(char M[][4])
-{
-    for (int i = 0; i < 100; i++)
-    {
-        if (i % 10 == 0)
-        {
-            printf("\nBlock %d\n\n", (i / 10 + 1));
-        }
         printf("%2d", i);
         for (int j = 0; j < 4; j++)
         {
@@ -43,61 +45,59 @@ void displayM(char M[][4])
     }
 }
 
-int findMemoryIndex(char n)
+void OS::init()
 {
-    switch (n)
+    for (int i = 0; i < 100; i++)
     {
-
-    case '0':
-        return 0;
-        break;
-    case '1':
-        return 10;
-        break;
-    case '2':
-        return 20;
-        break;
-    case '3':
-        return 30;
-        break;
-    default:
-        return 10;
-        break;
+        for (int j = 0; j < 4; j++)
+        {
+            M[i][j] = '-';
+        }
     }
 
-    // or
-    //  int x = n - '0'; // - '0' convert char to int
-    //  return x * 10;
+    blockCount = 0;
+    lineNo = 0;
 }
 
-// read data
-
-void read(string data, char IR[], char M[][4])
+int OS::findAddress()
 {
-    int row = findMemoryIndex(IR[2]);
+    int address = IR[2] - '0'; // to convert string to int
+    address = address * 10 + (IR[3] - '0');
+    return address;
+}
+
+void OS::read()
+{
+    getline(readFile, line);
+    cout << line << endl;
+
+    IR[3] = '0';
+    int address = findAddress();
+
+    int row = address;
     int col = 0;
-    for (int i = 0; i < data.length(); i++)
+    for (int i = 0; i < line.length(); i++)
     {
-        if (col == 4)
+        if (i >= 40)
         {
-            row++;
-            col = 0;
+            break;
         }
-        M[row][col] = data.at(i);
+        if (col > 3)
+        {
+            col = 0;
+            row++;
+        }
+        M[row][col] = line.at(i);
         col++;
     }
-    mCount += 10;
 }
 
-// write
-
-void write(char IR[], char M[][4])
+void OS::write()
 {
-    int startIndex = findMemoryIndex(IR[2]);
+    int address = findAddress();
+    int end = address + 10;
 
-    ofstream writeFile("output.txt", ios::app);
-
-    for (int i = startIndex; i <= (startIndex + 9); i++)
+    for (int i = address; i < end; i++)
     {
         for (int j = 0; j < 4; j++)
         {
@@ -107,199 +107,175 @@ void write(char IR[], char M[][4])
             }
         }
     }
-    writeFile.close();
+    writeFile << "\n";
 }
 
-// Terminate
-
-void Terminate()
+void OS::terminate()
 {
-    ofstream writeFile("output.txt", ios::app);
-    writeFile << "\n\n"
-              << endl;
-    writeFile.close();
+    writeFile << "\n\n";
 }
 
-// MOS
-
-void MOS(string data, int SI, char M[][4], char IR[])
+void OS::MOS()
 {
-
-    switch (SI)
+    if (SI == 1)
     {
-    case 1:
-        read(data, IR, M);
-        break;
-    case 2:
-        write(IR, M);
-        break;
-    case 3:
-        Terminate();
-        break;
-    default:
-        return;
-        break;
+        // line = "";
+        read();
+    }
+    else if (SI == 2)
+    {
+        write();
+    }
+    else if (SI == 3)
+    {
+        terminate();
     }
 }
 
-// execute program
-void executeProgram(string data, int IC, char M[][4])
+void OS::executeProgram()
 {
-    int SI = 3;
-    int C = 0;
-    char IR[4];
+    SI = 3;
+    C = false;
 
-    while (IC < noIn)
+    while (IC < lineNo)
     {
-        SI = 3;
+
         for (int i = 0; i < 4; i++)
         {
             IR[i] = M[IC][i];
         }
         IC++;
-        char R[40];
+        int address = findAddress();
 
-        string operation = "";
-        operation += IR[0];
-        operation += IR[1];
-
-        int memoryIndex = findMemoryIndex(IR[2]);
-
-        if (operation == "LR")
-        {
-            SI = 0;
-            int rCol = 0;
-            for (int i = memoryIndex; i <= (memoryIndex + 9); i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    R[rCol++] = M[i][j];
-                }
-            }
-        }
-        else if (operation == "SR")
-        {
-            SI = 0;
-            int rCol = 0;
-            for (int i = memoryIndex; i <= (memoryIndex + 9); i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    M[i][j] = R[rCol++];
-                }
-            }
-        }
-        else if (operation == "CR")
-        {
-            int rCol = 0;
-            for (int i = memoryIndex; i <= (memoryIndex + 9); i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    if (R[rCol++] != M[i][j])
-                    {
-                        cout << "Not Equal";
-                        break;
-                    }
-                }
-            }
-        }
-        else if (operation == "BT")
-        {
-            if (C == 1)
-            {
-                IC = memoryIndex;
-            }
-        }
-        else if (operation == "GD")
+        if (IR[0] == 'G' && IR[1] == 'D')
         {
             SI = 1;
+            MOS();
         }
-        else if (operation == "PD")
+        else if (IR[0] == 'P' && IR[1] == 'D')
         {
             SI = 2;
+            MOS();
         }
-        else if (operation == "H-")
+        else if (IR[0] == 'H' && IR[1] == ' ')
         {
             SI = 3;
+            MOS();
+            break;
+        }
+        else if (IR[0] == 'L' && IR[1] == 'R')
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                IR[i] = M[address][i];
+            }
+        }
+        else if (IR[0] == 'S' && IR[1] == 'R')
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                M[address][i] = IR[i];
+            }
+        }
+        else if (IR[0] == 'C' && IR[1] == 'R')
+        {
+            int count = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (M[address][i] == R[i])
+                {
+                    count++;
+                }
+            }
+            if (count == 4)
+            {
+                C = true;
+            }
+            else
+            {
+                C = false;
+            }
+        }
+        else if (IR[0] == 'B' && IR[1] == 'T')
+        {
+            if (C)
+            {
+                IC = address;
+                C = false;
+            }
         }
         else
         {
             cout << "Invalid Job" << endl;
             return;
         }
-        MOS(data, SI, M, IR);
     }
 }
 
-// start execution
-void startExecution(string data, char M[][4])
+void OS::startExecution()
 {
-    int IC = 0;
-    executeProgram(data, IC, M);
+    IC = 00;
+    executeProgram();
 }
 
-// loading data to memory
-void load(char M[][4])
+void OS::load()
 {
-    ifstream readFile;
-    string line;
 
-    readFile.open("input.txt");
-
-    while (getline(readFile, line))
+    do
     {
+        getline(readFile, line);
         string opcode = line.substr(0, 4);
+        // cout << line << endl;
 
         if (opcode == "$AMJ")
         {
+            init();
             continue;
         }
         else if (opcode == "$END")
         {
-            mCount = 0;
+            blockCount = 0;
             continue;
         }
         else if (opcode == "$DTA")
         {
-            if (getline(readFile, line))
-            {
-                string data = line;
-                startExecution(data, M);
-            }
-            else
-            {
-                cout << "Error" << endl;
-                break;
-            }
+            startExecution();
+            continue;
         }
         else
         {
-            int row = mCount;
+            int row = blockCount;
             int col = 0;
             for (int i = 0; i < line.length(); i++)
             {
-                if (col == 4)
+                if (col > 3)
                 {
-                    row++;
                     col = 0;
+                    row++;
                 }
                 M[row][col] = line.at(i);
+                if (line.at(i) == 'H')
+                {
+                    M[row][++col] = ' ';
+                    M[row][++col] = ' ';
+                    M[row][++col] = ' ';
+                }
                 col++;
             }
-
-            noIn = row + 1;
+            lineNo = row + 1;
         }
-    }
-    readFile.close();
+    } while (!readFile.eof());
 }
 
 int main()
 {
-    char M[100][4];
-    init(M);
-    load(M);
-    displayM(M);
+    OS os;
+    os.readFile.open("input.txt");
+    os.writeFile.open("output.txt", ios::app);
+    os.load();
+    os.display();
+    os.readFile.close();
+    os.writeFile.close();
 
     return 0;
 }
