@@ -167,14 +167,14 @@ void OS::executeProgram()
         {
             for (int i = 0; i < 4; i++)
             {
-                IR[i] = M[address][i];
+                R[i] = M[address][i];
             }
         }
         else if (IR[0] == 'S' && IR[1] == 'R')
         {
             for (int i = 0; i < 4; i++)
             {
-                M[address][i] = IR[i];
+                M[address][i] = R[i];
             }
         }
         else if (IR[0] == 'C' && IR[1] == 'R')
