@@ -49,6 +49,7 @@ public:
     void terminate();
     ifstream readFile;
     ofstream writeFile;
+    ofstream logFile;
     string line;
     //
     int randomNumArr[30] = {0};
@@ -135,6 +136,7 @@ void OS::display()
 
 void OS::init()
 {
+    logFile << "-------------------Init-------------------\n";
     for (int i = 0; i < 300; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -154,6 +156,7 @@ void OS::init()
 
 void OS::allocateFrame()
 {
+    logFile << "-------------------Page table allocation-------------------\n";
     int ptsi; // page table starting index
     ptsi = randomNum() * 10;
     cout << "Page table location (PTR) : " << ptsi << endl;
@@ -170,6 +173,7 @@ void OS::allocateFrame()
 
 void OS::read()
 {
+    logFile << "Loading data in main memory\n";
     getline(readFile, line);
     // cout << line << endl;
 
@@ -185,6 +189,9 @@ void OS::read()
     int address = find(IR[2], IR[3]);
 
     int row = rd;
+
+    logFile << "\tWriting at memory location : \n"
+            << rd << " - " << (rd + 9) << endl;
     int col = 0;
     for (int i = 0; i < line.length(); i++)
     {
@@ -200,6 +207,7 @@ void OS::read()
 
 void OS::write()
 {
+
     pcb.LLC++;
     if (pcb.LLC > pcb.TLL)
     {
@@ -282,7 +290,9 @@ void OS::MOS()
         // invalid --> terminate and EM = 6
         if (function == "GD" || function == "SR") // valid page fault
         {
+            logFile << "valid page fault\n";
             int fream_no = randomNum();
+            logFile << "Random Number generated : " << fream_no << endl;
             string progce = to_string(fream_no);
             int k = 3;
             for (int i = progce.length() - 1; i >= 0; i--)
@@ -337,7 +347,9 @@ void OS::MOS()
 
 int OS::addressMap(int VR)
 {
+    logFile << "------------------------In address map function --------------------" << endl;
     int pte, rd;
+
     if (VR >= 0 && VR <= 99)
     {
         pte = PTR + VR / 10;
@@ -390,6 +402,7 @@ int OS::find(char a, char b)
 
 void OS::executeProgram()
 {
+    logFile << "\n\tExecution started\n";
     while (true)
     {
 
@@ -418,7 +431,7 @@ void OS::executeProgram()
             IR[i] = M[RA][i];
         }
         IC++;
-
+        logFile << IR[0] << IR[1] << IR[2] << IR[3] << endl;
         function = "";
         function = function + IR[0];
         function = function + IR[1];
@@ -533,37 +546,48 @@ void OS::startExecution()
 
 void OS::load()
 {
-
+    logFile << "-------------------Load-------------------\n";
     do
     {
         getline(readFile, line);
+        logFile << "Card : " << line << endl;
         string opcode = line.substr(0, 4);
         if (opcode == "$AMJ")
         {
+            logFile << "\t$AMJ found\n";
             init();
             allocateFrame();
             string pid = line.substr(4, 4);
             string ttl = line.substr(8, 4);
             string tll = line.substr(12, 4);
+            logFile << "PCB : \n";
             pcb.PID = stoi(pid);
             pcb.TTL = stoi(ttl);
             pcb.TLL = stoi(tll);
             pcb.TTC = 0;
             pcb.LLC = 0;
+            logFile << "Process ID : " << pcb.PID << " Total Time Limit : " << pcb.TTL
+                    << " Total Line Limit : " << pcb.TLL << endl;
+            logFile << "Total time counter are initialized to : " << pcb.TTC << "  Line Limit counter are initialized to  : " << pcb.LLC << endl;
             continue;
         }
         else if (opcode == "$END")
         {
+            logFile << "\t$END found\n";
+            logFile << "---------------------------Program Terminated-------------------------\n";
+            logFile << "\n\n\n\n";
             display();
             continue;
         }
         else if (opcode == "$DTA")
         {
+            logFile << "\t$DTA found\n";
             startExecution();
             continue;
         }
         else
         {
+            logFile << "\tProgram card found\n";
             int fream_no = randomNum();
             // cout << "Instruction : " << fream_no << endl;
             int row = fream_no * 10;
@@ -606,10 +630,11 @@ int main()
     OS os;
     os.readFile.open("input.txt");
     os.writeFile.open("output.txt", ios::app);
+    os.logFile.open("log.txt", ios::app);
+    os.logFile << "-------------------Start-------------------\n";
     os.load();
-    // os.display();
     os.readFile.close();
     os.writeFile.close();
-
+    os.logFile.close();
     return 0;
 }
