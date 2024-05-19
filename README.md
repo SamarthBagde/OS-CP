@@ -1,2 +1,2 @@
 # OS-CP
- Operating system in C++ 👨‍💻👩‍💻
+Operating system in C++ 👨‍💻👩‍💻
