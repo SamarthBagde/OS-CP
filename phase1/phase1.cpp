@@ -1,281 +1,281 @@
-    #include <iostream>
-    #include <fstream>
-    #include <string>
+#include <iostream>
+#include <fstream>
+#include <string>
 
-    using namespace std;
+using namespace std;
 
-    class OS
+class OS
+{
+private:
+    char M[100][4];
+    char IR[4];
+    char R[4];
+    int SI;
+    int IC;
+    bool C;
+    int blockCount;
+    int lineNo;
+
+public:
+    void init();
+    void load();
+    void display();
+    void startExecution();
+    void executeProgram();
+    int findAddress();
+    void MOS();
+    void read();
+    void write();
+    void terminate();
+    ifstream readFile;
+    ofstream writeFile;
+    string line;
+};
+
+void OS::display()
+{
+    for (int i = 0; i < 100; i++)
     {
-    private:
-        char M[100][4];
-        char IR[4];
-        char R[4];
-        int SI;
-        int IC;
-        bool C;
-        int blockCount;
-        int lineNo;
-
-    public:
-        void init();
-        void load();
-        void display();
-        void startExecution();
-        void executeProgram();
-        int findAddress();
-        void MOS();
-        void read();
-        void write();
-        void terminate();
-        ifstream readFile;
-        ofstream writeFile;
-        string line;
-    };
-
-    void OS::display()
-    {
-        for (int i = 0; i < 100; i++)
+        printf("%2d", i);
+        for (int j = 0; j < 4; j++)
         {
-            printf("%2d", i);
-            for (int j = 0; j < 4; j++)
-            {
-                printf("%7c", M[i][j]);
-            }
-            printf("\n");
+            printf("%7c", M[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void OS::init()
+{
+    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            M[i][j] = '-';
         }
     }
 
-    void OS::init()
+    blockCount = 0;
+    lineNo = 0;
+}
+
+int OS::findAddress()
+{
+    int address = IR[2] - '0'; // to convert string to int
+    address = address * 10 + (IR[3] - '0');
+    return address;
+}
+
+void OS::read()
+{
+    getline(readFile, line);
+    cout << line << endl;
+
+    IR[3] = '0';
+    int address = findAddress();
+
+    int row = address;
+    int col = 0;
+    for (int i = 0; i < line.length(); i++)
     {
-        for (int i = 0; i < 100; i++)
+        if (i >= 40)
         {
-            for (int j = 0; j < 4; j++)
+            break;
+        }
+        if (col > 3)
+        {
+            col = 0;
+            row++;
+        }
+        M[row][col] = line.at(i);
+        col++;
+    }
+}
+
+void OS::write()
+{
+    int address = findAddress();
+    int end = address + 10;
+
+    for (int i = address; i < end; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (M[i][j] != '-')
             {
-                M[i][j] = '-';
+                writeFile << M[i][j];
             }
         }
-
-        blockCount = 0;
-        lineNo = 0;
     }
+    writeFile << "\n";
+}
 
-    int OS::findAddress()
+void OS::terminate()
+{
+    writeFile << "\n\n";
+}
+
+void OS::MOS()
+{
+    if (SI == 1)
     {
-        int address = IR[2] - '0'; // to convert string to int
-        address = address * 10 + (IR[3] - '0');
-        return address;
+        // line = "";
+        read();
     }
-
-    void OS::read()
+    else if (SI == 2)
     {
-        getline(readFile, line);
-        cout << line << endl;
+        write();
+    }
+    else if (SI == 3)
+    {
+        terminate();
+    }
+}
 
-        IR[3] = '0';
+void OS::executeProgram()
+{
+    SI = 3;
+    C = false;
+
+    while (IC < lineNo)
+    {
+
+        for (int i = 0; i < 4; i++)
+        {
+            IR[i] = M[IC][i];
+        }
+        IC++;
         int address = findAddress();
 
-        int row = address;
-        int col = 0;
-        for (int i = 0; i < line.length(); i++)
+        if (IR[0] == 'G' && IR[1] == 'D')
         {
-            if (i >= 40)
-            {
-                break;
-            }
-            if (col > 3)
-            {
-                col = 0;
-                row++;
-            }
-            M[row][col] = line.at(i);
-            col++;
+            SI = 1;
+            MOS();
         }
-    }
-
-    void OS::write()
-    {
-        int address = findAddress();
-        int end = address + 10;
-
-        for (int i = address; i < end; i++)
+        else if (IR[0] == 'P' && IR[1] == 'D')
         {
-            for (int j = 0; j < 4; j++)
-            {
-                if (M[i][j] != '-')
-                {
-                    writeFile << M[i][j];
-                }
-            }
+            SI = 2;
+            MOS();
         }
-        writeFile << "\n";
-    }
-
-    void OS::terminate()
-    {
-        writeFile << "\n\n";
-    }
-
-    void OS::MOS()
-    {
-        if (SI == 1)
+        else if (IR[0] == 'H' && IR[1] == ' ')
         {
-            // line = "";
-            read();
+            SI = 3;
+            MOS();
+            break;
         }
-        else if (SI == 2)
+        else if (IR[0] == 'L' && IR[1] == 'R')
         {
-            write();
-        }
-        else if (SI == 3)
-        {
-            terminate();
-        }
-    }
-
-    void OS::executeProgram()
-    {
-        SI = 3;
-        C = false;
-
-        while (IC < lineNo)
-        {
-
             for (int i = 0; i < 4; i++)
             {
-                IR[i] = M[IC][i];
-            }
-            IC++;
-            int address = findAddress();
-
-            if (IR[0] == 'G' && IR[1] == 'D')
-            {
-                SI = 1;
-                MOS();
-            }
-            else if (IR[0] == 'P' && IR[1] == 'D')
-            {
-                SI = 2;
-                MOS();
-            }
-            else if (IR[0] == 'H' && IR[1] == ' ')
-            {
-                SI = 3;
-                MOS();
-                break;
-            }
-            else if (IR[0] == 'L' && IR[1] == 'R')
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    R[i] = M[address][i];
-                }
-            }
-            else if (IR[0] == 'S' && IR[1] == 'R')
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    M[address][i] = R[i];
-                }
-            }
-            else if (IR[0] == 'C' && IR[1] == 'R')
-            {
-                int count = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (M[address][i] == R[i])
-                    {
-                        count++;
-                    }
-                }
-                if (count == 4)
-                {
-                    C = true;
-                }
-                else
-                {
-                    C = false;
-                }
-            }
-            else if (IR[0] == 'B' && IR[1] == 'T')
-            {
-                if (C)
-                {
-                    IC = address;
-                    C = false;
-                }
-            }
-            else
-            {
-                cout << "Invalid Job" << endl;
-                return;
+                R[i] = M[address][i];
             }
         }
-    }
-
-    void OS::startExecution()
-    {
-        IC = 00;
-        executeProgram();
-    }
-
-    void OS::load()
-    {
-
-        do
+        else if (IR[0] == 'S' && IR[1] == 'R')
         {
-            getline(readFile, line);
-            string opcode = line.substr(0, 4);
-            // cout << line << endl;
-
-            if (opcode == "$AMJ")
+            for (int i = 0; i < 4; i++)
             {
-                init();
-                continue;
+                M[address][i] = R[i];
             }
-            else if (opcode == "$END")
+        }
+        else if (IR[0] == 'C' && IR[1] == 'R')
+        {
+            int count = 0;
+            for (int i = 0; i < 4; i++)
             {
-                blockCount = 0;
-                continue;
+                if (M[address][i] == R[i])
+                {
+                    count++;
+                }
             }
-            else if (opcode == "$DTA")
+            if (count == 4)
             {
-                startExecution();
-                continue;
+                C = true;
             }
             else
             {
-                int row = blockCount;
-                int col = 0;
-                for (int i = 0; i < line.length(); i++)
-                {
-                    if (col > 3)
-                    {
-                        col = 0;
-                        row++;
-                    }
-                    M[row][col] = line.at(i);
-                    if (line.at(i) == 'H')
-                    {
-                        M[row][++col] = ' ';
-                        M[row][++col] = ' ';
-                        M[row][++col] = ' ';
-                    }
-                    col++;
-                }
-                lineNo = row + 1;
+                C = false;
             }
-        } while (!readFile.eof());
+        }
+        else if (IR[0] == 'B' && IR[1] == 'T')
+        {
+            if (C)
+            {
+                IC = address;
+                C = false;
+            }
+        }
+        else
+        {
+            cout << "Invalid Job" << endl;
+            return;
+        }
     }
+}
 
-    int main()
+void OS::startExecution()
+{
+    IC = 00;
+    executeProgram();
+}
+
+void OS::load()
+{
+
+    do
     {
-        OS os;
-        os.readFile.open("input.txt");
-        os.writeFile.open("output.txt", ios::app);
-        os.load();
-        os.display();
-        os.readFile.close();
-        os.writeFile.close();
+        getline(readFile, line);
+        string opcode = line.substr(0, 4);
+        // cout << line << endl;
 
-        return 0;
-    }
+        if (opcode == "$AMJ")
+        {
+            init();
+            continue;
+        }
+        else if (opcode == "$END")
+        {
+            blockCount = 0;
+            continue;
+        }
+        else if (opcode == "$DTA")
+        {
+            startExecution();
+            continue;
+        }
+        else
+        {
+            int row = blockCount;
+            int col = 0;
+            for (int i = 0; i < line.length(); i++)
+            {
+                if (col > 3)
+                {
+                    col = 0;
+                    row++;
+                }
+                M[row][col] = line.at(i);
+                if (line.at(i) == 'H')
+                {
+                    M[row][++col] = ' ';
+                    M[row][++col] = ' ';
+                    M[row][++col] = ' ';
+                }
+                col++;
+            }
+            lineNo = row + 1;
+        }
+    } while (!readFile.eof());
+}
+
+int main()
+{
+    OS os;
+    os.readFile.open("input.txt");
+    os.writeFile.open("output.txt", ios::app);
+    os.load();
+    os.display();
+    os.readFile.close();
+    os.writeFile.close();
+
+    return 0;
+}
