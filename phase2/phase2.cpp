@@ -306,7 +306,7 @@ void OS::MOS()
             }
             IC--;
         }
-        else if (function == "PD") // invalid page fault
+        else if (function == "PD" || function == "LR") // invalid page fault
         {
             errmsg(6);
             terminate();
