@@ -621,12 +621,17 @@ void OS::MOS()
     {
         // IR3, IR2
         // printf("IR3 IR2\n");
+        channel3();
+        channel2();
         globalTime += 5;
     }
     else if (IOI == 7)
     {
         // IR2, IR1, IR3
         // printf("IR2 IR1 IR3\n");
+        channel1();
+        channel2();
+        channel3();
         globalTime += 5;
     }
 }

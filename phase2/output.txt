@@ -1,0 +1,58 @@
+Hello world
+NO Error
+SI : 3	TI : 0	PI : 0
+TTL : 5	TLL : 1	TTC : 4	LLC : 1
+IC : 3
+
+
+Opration Code Error
+SI : 3	TI : 0	PI : 3
+TTL : 5	TLL : 1	TTC : 0	LLC : 0
+IC : 1
+
+
+Oprand Error
+SI : 3	TI : 0	PI : 2
+TTL : 5	TLL : 1	TTC : 2	LLC : 0
+Hello world
+NO Error
+SI : 3	TI : 0	PI : 0
+TTL : 5	TLL : 1	TTC : 4	LLC : 1
+IC : 3
+
+
+Opration Code Error
+SI : 3	TI : 0	PI : 3
+TTL : 5	TLL : 1	TTC : 0	LLC : 0
+IC : 1
+
+
+Oprand Error
+SI : 3	TI : 0	PI : 2
+TTL : 5	TLL : 1	TTC : 2	LLC : 0
+IC : 2
+
+Hello world
+Time Limit Exceeded
+SI : 2	TI : 2	PI : 0
+TTL : 2	TLL : 1	TTC : 3	LLC : 1
+IC : 2
+
+
+Line Limit Exceeded
+SI : 2	TI : 0	PI : 0
+TTL : 5	TLL : 0	TTC : 3	LLC : 1
+IC : 2
+
+
+Out Of Data
+SI : 1	TI : 0	PI : 0
+TTL : 5	TLL : 1	TTC : 2	LLC : 0
+IC : 1
+
+
+Invalid Page Fault
+SI : 3	TI : 0	PI : 3
+TTL : 5	TLL : 1	TTC : 2	LLC : 0
+IC : 2
+

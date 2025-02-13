@@ -1,0 +1,223 @@
+-------------------Start-------------------
+-------------------Load-------------------
+Card : $AMJ000200050001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD10H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 24
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+240 - 249
+------------------------In address map function --------------------
+PD10
+------------------------In address map function --------------------
+------------------------In address map function --------------------
+H   
+Card : $END0002 
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
+Card : $AMJ000200050001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GA10PD10H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GA10
+------------------------In address map function --------------------
+Card : Hello world
+	Program card found
+Card : $END0002
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
+Card : $AMJ000200050001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD1aH
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 14
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+140 - 149
+------------------------In address map function --------------------
+PD1a
+------------------------In address map function --------------------
+Card : $END0002
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
+Card : $AMJ000200020001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 2 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD10H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 27
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+270 - 279
+------------------------In address map function --------------------
+PD10
+------------------------In address map function --------------------
+Card : $END0002
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
+Card : $AMJ000200050000
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 0
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD10H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 13
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+130 - 139
+------------------------In address map function --------------------
+PD10
+------------------------In address map function --------------------
+Card : $END0002
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
+Card : $AMJ000200050001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD10H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 3
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+30 - 39
+Card : $AMJ000200050001
+	$AMJ found
+-------------------Init-------------------
+-------------------Page table allocation-------------------
+PCB : 
+Process ID : 2 Total Time Limit : 5 Total Line Limit : 1
+Total time counter are initialized to : 0  Line Limit counter are initialized to  : 0
+Card : GD10PD20H
+	Program card found
+Card : $DTA
+	$DTA found
+
+	Execution started
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+valid page fault
+Random Number generated : 16
+------------------------In address map function --------------------
+GD10
+------------------------In address map function --------------------
+Loading data in main memory
+	Writing at memory location : 
+160 - 169
+------------------------In address map function --------------------
+PD20
+------------------------In address map function --------------------
+Card : $END0002
+	$END found
+---------------------------Program Terminated-------------------------
+
+
+
+
